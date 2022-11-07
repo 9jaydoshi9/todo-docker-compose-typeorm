@@ -1,0 +1,26 @@
+version: "3.7"
+
+services:
+  mysql_docker_compose_todo:
+    image: mysql
+    environment:
+      MYSQL_ROOT_HOST: '%'
+      MYSQL_ROOT_PASSWORD: 'root'
+      MYSQL_DATABASE: 'todo_1'
+    ports:
+      - 3306:3306
+    volumes:
+      - todo_compose_volume:/var/lib/mysql
+    restart: unless-stopped
+  todo_compose_app:
+    depends_on:
+      - mysql_docker_compose_todo
+    build: .
+    env_file: .env
+    environment:
+      - DB_HOST=mysql_docker_compose_todo
+    restart: unless-stopped
+    ports:
+      - 3000:3000
+volumes: 
+  todo_compose_volume:
